@@ -3,4 +3,5 @@
 
 TODO:
 * Add better logic for computer player
-* Add horizontal and verticle lines to board to make it look like a tic tac toe board
+* Add horizontal and verticle lines to board to make it look like a tic tac toe board (?)
+* Clean up code
