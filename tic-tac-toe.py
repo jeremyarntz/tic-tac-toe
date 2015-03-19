@@ -31,6 +31,18 @@ def is_winner(board, player):
 		(board[0][0] == player and board[1][1] == player and board[2][2] == player) or #Left Right Diag
 		(board[0][2] == player and board[1][1] == player and board[2][0] == player)) #Right Left Diag
 
+def is_board_full(board):
+	free_spots = 0;
+	for r in range(0, 3):
+		for c in range(0, 3):
+			if board[r][c] == '-':
+				free_spots = free_spots + 1
+
+	if free_spots == 0:
+		return True
+	else:
+		return False
+
 while True:
 	print_board(board)
 	print ""
@@ -51,10 +63,14 @@ while True:
 		board[pick_row-1][pick_col-1] = "X"
 
 	if skip == False:
+
 		print_board(board)
 		print ""
 		if is_winner(board, 'X'):
 			print "You Win!"
+			break
+		if is_board_full(board):
+			print "It's a Tie!"
 			break
 
 		pick_random(board)
@@ -62,4 +78,8 @@ while True:
 			print_board(board)
 			print ""
 			print "I Win!"
+			break
+
+		if is_board_full(board):
+			print "It's a Tie!"
 			break
