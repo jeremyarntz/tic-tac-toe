@@ -1,6 +1,5 @@
 # Tic Tac Toe
-
-## My second python script a simple tic tac toe game based on code and ideas in the Code Academy Battle Ship Lesson.
+### My second python script a simple tic tac toe game based on code and ideas in the Code Academy Battle Ship Lesson.
 
 TODO:
 * Add check for tie.
