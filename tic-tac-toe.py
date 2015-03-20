@@ -3,6 +3,15 @@ from random import randint
 # Create an empty board
 board = []
 
+wins = [['0 0', '0 1', '0 2'],
+		['1 0', '1 1', '1 2'],
+		['2 0', '2 1', '2 2'],
+		['0 0', '1 0', '2 0'],
+		['0 1', '1 1', '2 1'],
+		['0 2', '1 2', '2 2'],
+		['0 0', '1 1', '2 2'],
+		['0 2', '1 1', '2 0']]
+
 # Populate the Board
 for i in range(0, 3):
     board.append(["-"] * 3)
@@ -10,16 +19,6 @@ for i in range(0, 3):
 def print_board(board):
     for row in board:
 		print " ".join(row)
-
-def pick_random(board):
-	row = randint(0, len(board) - 1)
-	col = randint(0, len(board[0]) - 1)
-	if board[row][col] == '-':
-		board[row][col] = 'O'
-	else:
-		pick_random(board)
-
-	return board
 
 def is_winner(board, player):
 	return ((board[0][0] == player and board[0][1] == player and board[0][2] == player) or #Top Row
@@ -43,6 +42,60 @@ def is_board_full(board):
 	else:
 		return False
 
+def check_moves(wins, board):
+	moves = {}
+	for win in wins:
+		row_x = 0;
+		row_o = 0;
+		row_empty = []
+		for space in win:
+			space_coords = space.split(' ');
+			space_row = int(space_coords[0])
+			space_col = int(space_coords[1])
+			space_value = board[space_row][space_col]
+
+			if space_value == 'X':
+				row_x = row_x + 1
+			elif space_value == 'O':
+				row_o = row_o + 1
+			else: #add blank spots to list
+				spot = '%s %s' % (space_coords[0],space_coords[1])
+				#if spot not in row_empty:
+				row_empty.append(spot)
+
+		if len(row_empty) > 0:
+
+			#determine the row value
+			if row_o == 2:
+				row_value = 1000; 	#for the win
+			elif row_x == 2:
+				row_value = 100 	#for the block
+			elif row_o == 1 and row_x == 0:
+				row_value = 10 		#a row we have square and the player doesn't
+			else:
+				row_value = 1 		#empty row
+
+			for space in row_empty:
+				if space in moves:
+					moves[space] = moves[space] + row_value
+				else:
+					moves[space] = row_value
+
+	#determine the best move
+	highest_move_value = 0
+	highest_move = ''
+	for move in moves:
+		if moves[move] > highest_move_value:
+			highest_move = move
+			highest_move_value = moves[move]
+
+	move_parts = highest_move.split(' ')
+
+	#make our move
+	board[int(move_parts[0])][int(move_parts[1])] = 'O'
+
+	return board
+
 while True:
 	print_board(board)
 	print ""
@@ -57,13 +110,12 @@ while True:
 		print "Oops, that's not even on the board."
 		skip = True
 	elif board[pick_row-1][pick_col-1] != '-': #check to see if position is already filled on board
-		print "You guessed that one already."
+		print "That square is already taken."
 		skip = True
 	else:
 		board[pick_row-1][pick_col-1] = "X"
 
 	if skip == False:
-
 		print_board(board)
 		print ""
 		if is_winner(board, 'X'):
@@ -73,7 +125,7 @@ while True:
 			print "It's a Tie!"
 			break
 
-		pick_random(board)
+		check_moves(wins, board)
 		if is_winner(board, 'O'):
 			print_board(board)
 			print ""
